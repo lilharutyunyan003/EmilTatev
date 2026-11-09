@@ -764,8 +764,8 @@
             transform: translateY(0); /* Moves up to original position */
         }
 
-        /* HIDDEN YOUTUBE AUDIO PLAYER */
-        #bg-music {
+        /* HIDDEN YOUTUBE PLAYER FOR AUDIO ONLY */
+        #yt-player {
             position: fixed;
             top: -9999px;
             left: -9999px;
@@ -812,14 +812,8 @@
 </head>
 <body>
 
-    <!-- BACKGROUND MUSIC -->
-    <iframe id="bg-music" 
-            src="https://www.youtube.com/embed/RzsJe9S4B0I?autoplay=1&loop=1&playlist=RzsJe9S4B0I&start=0&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1" 
-            frameborder="0" 
-            allow="autoplay; encrypted-media" 
-            allowfullscreen
-            loading="lazy">
-    </iframe>
+    <!-- HIDDEN YOUTUBE PLAYER FOR AUDIO -->
+    <div id="yt-player"></div>
 
     <div class="invitation-wrapper">
         
@@ -1061,17 +1055,44 @@
 
     </div>
 
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        // === SMART AUTOPLAY SCRIPT ===
-        // This script tries to play music on the very first interaction (scroll or click)
-        // because browsers block autoplay without user gesture.
+        let player;
         let musicStarted = false;
-        const iframe = document.getElementById('bg-music');
 
+        // Initialize YouTube Player
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('yt-player', {
+                height: '1',
+                width: '1',
+                videoId: 'RzsJe9S4B0I',
+                playerVars: {
+                    'autoplay': 0, // Will be triggered by JS
+                    'loop': 1,
+                    'playlist': 'RzsJe9S4B0I',
+                    'controls': 0,
+                    'showinfo': 0,
+                    'rel': 0,
+                    'iv_load_policy': 3,
+                    'modestbranding': 1,
+                    'start': 0
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Player is ready, waiting for user interaction
+        }
+
+        // Start music on first interaction
         function startMusic() {
-            if (!musicStarted) {
-                // Reload iframe with autoplay enabled
-                iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
+            if (!musicStarted && player && typeof player.playVideo === 'function') {
+                player.playVideo();
+                player.setVolume(100);
                 musicStarted = true;
             }
         }
