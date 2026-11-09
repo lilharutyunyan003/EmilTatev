@@ -1062,6 +1062,35 @@
     </div>
 
     <script>
+        // === SMART AUTOPLAY SCRIPT ===
+        // This script tries to play music on the very first interaction (scroll or click)
+        // because browsers block autoplay without user gesture.
+        let musicStarted = false;
+        const iframe = document.getElementById('bg-music');
+
+        function startMusic() {
+            if (!musicStarted) {
+                // Reload iframe with autoplay enabled
+                iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
+                musicStarted = true;
+            }
+        }
+
+        // Trigger on first scroll
+        window.addEventListener('scroll', function() {
+            startMusic();
+        }, { once: true });
+
+        // Trigger on first click/tap anywhere
+        document.addEventListener('click', function() {
+            startMusic();
+        }, { once: true });
+        
+        // Trigger on touch
+        document.addEventListener('touchstart', function() {
+            startMusic();
+        }, { once: true });
+
         // === LOVE ANIMATION ===
         const loText = document.getElementById('lo-text');
         const veText = document.getElementById('ve-text');
