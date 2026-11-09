@@ -1,16 +1,8 @@
-Հեռախոսով չբացվելու հիմնական պատճառը **YouTube-ի iframe-ն** է։ Ժամանակակից բջջային բրաուզերները (հատկապես iPhone/Safari) խիստ սահմանափակումներ ունեն autoplay-ի նկատմամբ։ Եթե էջը բեռնվելիս YouTube-ը փորձում է միանալ, բայց բրաուզերը արգելափակում է այն, ապա ամբողջ JavaScript կոդը կարող է «կախվել» (freeze), և մյուս անիմացիաները չեն աշխատի։
-
-Ահա լուծումը.
-1.  **YouTube-ի iframe-ը դարձրել եմ ավելի անվտանգ** (`loading="lazy"` և `allow` attributes):
-2.  **Ավելացրել եմ "Fallback"**: Եթե YouTube-ը չբացվի, էջը **չի կախվի**, այլ պարզապես կշարունակի աշխատել առանց երաժշտության։
-3.  **Scroll-ի trigger**: Երաժշտությունը կփորձի միանալ միայն առաջին scroll-ից հետո (սա շրջանցում է բրաուզերի արգելքը):
-
-```html
 <!DOCTYPE html>
 <html lang="hy">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emil & Tatev - Wedding Invitation</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Marck+Script&family=Pinyon+Script&family=Noto+Sans+Armenian:wght@300;400&display=swap" rel="stylesheet">
     
@@ -22,7 +14,6 @@
             font-family: 'Noto Sans Armenian', sans-serif;
             overflow-x: hidden;
             color: #FFFAF0;
-            -webkit-font-smoothing: antialiased; /* Fix for iOS fonts */
         }
 
         .invitation-wrapper {
@@ -37,7 +28,6 @@
         .reveal-on-scroll {
             opacity: 0;
             transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
-            will-change: transform, opacity; /* Performance fix for mobile */
         }
 
         .reveal-on-scroll.from-left { transform: translateX(-60px); }
@@ -87,6 +77,7 @@
             left: 0;
             width: 100%;
             text-align: center;
+            /* CHANGED TO DARK BROWN FOR BETTER CONTRAST ON LIGHT BG */
             color: #3E2723; 
             z-index: 10;
             text-shadow: 0 0 20px rgba(255,255,255,0.9), 0 2px 8px rgba(255,255,255,0.6);
@@ -112,7 +103,7 @@
             font-size: 24px;
             letter-spacing: 2px;
             font-weight: 600;
-            color: #3E2723;
+            color: #3E2723; /* Dark brown date */
             text-transform: uppercase;
             
             position: absolute;
@@ -304,10 +295,11 @@
 
         .wave-path {
             fill: none;
-            stroke: #FFFFFF;
-            stroke-width: 1.5;
+            stroke: #FFFFFF; /* Pure white */
+            stroke-width: 1.5; /* Thicker for visibility */
             stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
+            stroke-dashoffset: 1000; /* Starts fully hidden */
+            /* NO CSS TRANSITION - controlled by JS for heart-following effect */
         }
 
         .sliding-heart {
@@ -341,6 +333,7 @@
             text-align: left;
         }
 
+        /* SMALLER TEXT FOR TIMELINE ITEMS */
         .timeline-time {
             font-family: 'Cormorant Garamond', serif;
             font-size: 16px;
@@ -366,6 +359,7 @@
             margin-bottom: 6px;
         }
 
+        /* GOOGLE MAPS BUTTON - EVEN SMALLER */
         .map-btn {
             display: inline-block;
             padding: 3px 8px;
@@ -374,7 +368,7 @@
             border-radius: 20px;
             color: #FFF8E7;
             font-family: 'Noto Sans Armenian', sans-serif;
-            font-size: 7px;
+            font-size: 7px; /* Reduced from 8px */
             text-decoration: none;
             transition: all 0.3s ease;
             cursor: pointer;
@@ -392,7 +386,7 @@
         .item-4 { top: 270px; left: 58%; text-align: left; }
         .item-4 .timeline-place { font-size: 13px; white-space: normal; line-height: 1.2; }
 
-        /* ================= FOURTH PAGE ================= */
+        /* ================= FOURTH PAGE (SAVE THE DATE + COLLAGE + CALENDAR) ================= */
         .gallery-section {
             position: relative;
             padding: 60px 0 0;
@@ -405,6 +399,7 @@
             background-position: center;
         }
 
+        /* SAVE THE DATE - APPEARS FROM BEHIND PREVIOUS SECTION */
         .save-the-date-title {
             font-family: 'Pinyon Script', cursive;
             font-size: 48px;
@@ -435,9 +430,10 @@
             margin-bottom: 0;
         }
 
+        /* CALENDAR RESTORED IN WHITE SPACE - RAISED HIGHER */
         .svg-calendar {
             position: absolute;
-            top: 35%;
+            top: 35%; /* Raised higher than before (was 38%) */
             right: 5%;
             left: auto;
             transform: translate(50px, -50%);
@@ -731,14 +727,15 @@
             transform: translateY(0);
         }
 
+        /* WAITING TEXT - DARK BROWN AS REQUESTED */
         .ending-top-text {
             font-family: 'Pinyon Script', cursive;
             font-size: 26px;
-            color: #3E2723;
+            color: #3E2723; /* Dark brown instead of white */
             margin-top: 0;
             z-index: 3;
             position: relative;
-            text-shadow: 0 2px 10px rgba(255,255,255,0.8);
+            text-shadow: 0 2px 10px rgba(255,255,255,0.8); /* White shadow for readability on photo */
             opacity: 0;
             transform: translateY(20px);
             transition: all 1.5s ease-out;
@@ -751,7 +748,7 @@
             transform: translateY(0);
         }
 
-        /* HIDDEN YOUTUBE AUDIO PLAYER - OPTIMIZED FOR MOBILE */
+        /* HIDDEN YOUTUBE AUDIO PLAYER */
         #bg-music {
             position: fixed;
             top: -9999px;
@@ -770,13 +767,12 @@
 </head>
 <body>
 
-    <!-- BACKGROUND MUSIC (OPTIMIZED FOR MOBILE) -->
+    <!-- BACKGROUND MUSIC (STARTS AT 40s FOR CHORUS) -->
     <iframe id="bg-music" 
             src="https://www.youtube.com/embed/aUjZJHX29oE?autoplay=1&loop=1&playlist=aUjZJHX29oE&start=40&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1" 
             frameborder="0" 
             allow="autoplay; encrypted-media" 
-            allowfullscreen
-            loading="lazy">
+            allowfullscreen>
     </iframe>
 
     <div class="invitation-wrapper">
@@ -837,12 +833,14 @@
             <div class="timeline-header reveal-on-scroll from-top delay-1">Օրվա ծրագիր</div>
 
             <div class="timeline-wrapper" id="timeline-wrapper">
+                <!-- S-SHAPED WAVE LINE RESTORED - PURE WHITE -->
                 <svg class="wave-line-svg" viewBox="0 0 200 400" preserveAspectRatio="none">
                     <path id="timeline-path" class="wave-path" d="M100,0 C200,53 0,107 100,160 C180,220 20,280 100,340 C140,370 60,390 100,400" />
                 </svg>
 
                 <div class="sliding-heart" id="sliding-heart"></div>
 
+                <!-- Item 1: Groom's House -->
                 <div class="timeline-item item-1 reveal-on-scroll from-left delay-1">
                     <div class="timeline-time">11:00</div>
                     <div class="timeline-place">Փեսայի տուն</div>
@@ -850,6 +848,7 @@
                     <a href="https://www.google.com/maps/search/?api=1&query=Մասիս+Հանրապետության+10/1" target="_blank" class="map-btn">📍 Տեսնել քարտեզում</a>
                 </div>
 
+                <!-- Item 2: Bride's House -->
                 <div class="timeline-item item-2 reveal-on-scroll from-right delay-2">
                     <div class="timeline-time">12:00</div>
                     <div class="timeline-place">Հարսի տուն</div>
@@ -857,6 +856,7 @@
                     <a href="https://www.google.com/maps/search/?api=1&query=Մասիս+Մխիթար+Հերացի+7/8" target="_blank" class="map-btn">📍 Տեսնել քարտեզում</a>
                 </div>
 
+                <!-- Item 3: Ceremony -->
                 <div class="timeline-item item-3 reveal-on-scroll from-left delay-3">
                     <div class="timeline-time">15:00</div>
                     <div class="timeline-place">Պսակադրություն</div>
@@ -864,6 +864,7 @@
                     <a href="https://www.google.com/maps/search/?api=1&query=Շողակաթ+եկեղեցի+Էջմիածին" target="_blank" class="map-btn">📍 Տեսնել քարտեզում</a>
                 </div>
 
+                <!-- Item 4: Reception -->
                 <div class="timeline-item item-4 reveal-on-scroll from-right delay-4">
                     <div class="timeline-time">17:00</div>
                     <div class="timeline-place">Հարսանեկան<br>խնջույք</div>
@@ -881,6 +882,7 @@
 
             <div class="collage-container">
                 
+                <!-- CALENDAR RESTORED IN WHITE SPACE - RAISED HIGHER -->
                 <svg class="svg-calendar reveal-on-scroll from-right delay-3" viewBox="0 0 240 260" xmlns="http://www.w3.org/2000/svg">
                     <text x="120" y="45" font-family="'Pinyon Script', cursive" font-size="42" fill="#3E2723" text-anchor="middle">August</text>
                     
@@ -892,6 +894,7 @@
                     <text x="185" y="75" font-family="'Cormorant Garamond', serif" font-size="12" fill="#3E2723" text-anchor="middle">Sat</text>
                     <text x="215" y="75" font-family="'Cormorant Garamond', serif" font-size="12" fill="#3E2723" text-anchor="middle">Sun</text>
                     
+                    <!-- Row 1: Aug 1 = Saturday -->
                     <text x="35" y="105" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle"></text>
                     <text x="65" y="105" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle"></text>
                     <text x="95" y="105" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle"></text>
@@ -902,6 +905,7 @@
                           fill="none" stroke="#C41E3A" stroke-width="1.5" opacity="1"/>
                     <text x="215" y="105" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">2</text>
                     
+                    <!-- Row 2 -->
                     <text x="35" y="135" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">3</text>
                     <text x="65" y="135" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">4</text>
                     <text x="95" y="135" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">5</text>
@@ -910,6 +914,7 @@
                     <text x="185" y="135" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">8</text>
                     <text x="215" y="135" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">9</text>
                     
+                    <!-- Row 3 -->
                     <text x="35" y="165" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">10</text>
                     <text x="65" y="165" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">11</text>
                     <text x="95" y="165" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">12</text>
@@ -918,6 +923,7 @@
                     <text x="185" y="165" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">15</text>
                     <text x="215" y="165" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">16</text>
                     
+                    <!-- Row 4 -->
                     <text x="35" y="195" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">17</text>
                     <text x="65" y="195" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">18</text>
                     <text x="95" y="195" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">19</text>
@@ -926,6 +932,7 @@
                     <text x="185" y="195" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">22</text>
                     <text x="215" y="195" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">23</text>
                     
+                    <!-- Row 5 -->
                     <text x="35" y="225" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">24</text>
                     <text x="65" y="225" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">25</text>
                     <text x="95" y="225" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">26</text>
@@ -934,6 +941,7 @@
                     <text x="185" y="225" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">29</text>
                     <text x="215" y="225" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">30</text>
                     
+                    <!-- Row 6: Day 31 -->
                     <text x="35" y="255" font-family="'Cormorant Garamond', serif" font-size="14" fill="#3E2723" text-anchor="middle">31</text>
                 </svg>
 
@@ -1120,6 +1128,7 @@
             let progress = (startTrigger - rect.top) / (startTrigger - endTrigger);
             progress = Math.max(0, Math.min(1, progress));
             
+            // Get exact point on path for heart position
             const point = pathElement.getPointAtLength(progress * pathLength);
             
             const svgWidth = 200;
@@ -1131,6 +1140,7 @@
             slidingHeart.style.left = `${xPercent}%`;
             slidingHeart.style.top = `${yPixel}px`;
             
+            // Draw line ONLY behind heart by updating dashoffset dynamically
             const currentOffset = pathLength - (progress * pathLength);
             pathElement.style.strokeDashoffset = currentOffset;
             
@@ -1192,4 +1202,3 @@
 
 </body>
 </html>
-```
