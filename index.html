@@ -764,8 +764,8 @@
             transform: translateY(0); /* Moves up to original position */
         }
 
-        /* HIDDEN YOUTUBE PLAYER FOR AUDIO ONLY */
-        #yt-player {
+        /* HIDDEN VIDEO PLAYER FOR AUDIO ONLY */
+        #bg-audio-video {
             position: fixed;
             top: -9999px;
             left: -9999px;
@@ -812,8 +812,10 @@
 </head>
 <body>
 
-    <!-- HIDDEN YOUTUBE PLAYER FOR AUDIO -->
-    <div id="yt-player"></div>
+    <!-- HIDDEN MP4 VIDEO FOR AUDIO -->
+    <video id="bg-audio-video" loop playsinline muted preload="auto">
+        <source src="https://cdn.shopify.com/videos/c/o/v/67a34a6327784f04b859cbfe8b734e07.mp4" type="video/mp4">
+    </video>
 
     <div class="invitation-wrapper">
         
@@ -1055,45 +1057,20 @@
 
     </div>
 
-    <!-- YouTube IFrame API -->
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        let player;
+        // === MP4 AUDIO AUTOPLAY SCRIPT ===
         let musicStarted = false;
+        const videoEl = document.getElementById('bg-audio-video');
 
-        // Initialize YouTube Player
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('yt-player', {
-                height: '1',
-                width: '1',
-                videoId: 'RzsJe9S4B0I',
-                playerVars: {
-                    'autoplay': 0, // Will be triggered by JS
-                    'loop': 1,
-                    'playlist': 'RzsJe9S4B0I',
-                    'controls': 0,
-                    'showinfo': 0,
-                    'rel': 0,
-                    'iv_load_policy': 3,
-                    'modestbranding': 1,
-                    'start': 0
-                },
-                events: {
-                    'onReady': onPlayerReady
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            // Player is ready, waiting for user interaction
-        }
-
-        // Start music on first interaction
         function startMusic() {
-            if (!musicStarted && player && typeof player.playVideo === 'function') {
-                player.playVideo();
-                player.setVolume(100);
-                musicStarted = true;
+            if (!musicStarted && videoEl) {
+                videoEl.muted = false; // Unmute on first interaction
+                videoEl.volume = 1.0;
+                videoEl.play().then(() => {
+                    musicStarted = true;
+                }).catch(e => {
+                    console.log("Audio play failed, waiting for next interaction:", e);
+                });
             }
         }
 
